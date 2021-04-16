@@ -5,11 +5,11 @@ module.exports = (express, controller) => {
 
   router.get('/:id', controller.getUser);
 
-  router.post('/', controller.createUser);
+  router.post('/create', controller.createUser);
 
-  router.put('/:id', controller.updateUser);
+  router.post('/update/:id', controller.updateUser);
 
-  router.delete('/:id', controller.deleteUser);
+  router.post('/delete/:id', controller.deleteUser);
 
   return router;
 };

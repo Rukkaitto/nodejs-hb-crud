@@ -1,35 +1,43 @@
-const ObjectId = require("mongoose").Types.ObjectId;
+const User = require("../models/users.model");
 
-module.exports = (User) => ({
+module.exports = class {
   getAll() {
-    return User.find({});
-  },
+    return new Promise((resolve, reject) => {
+      User.find({}, (err, users) => {
+        err ? reject(err) : resolve(users.map((user) => user.toObject()));
+      });
+    });
+  }
 
   getOne(id) {
-    if (ObjectId.isValid(id)) {
-      return User.findById(id);
-    } 
-  },
+    return new Promise((resolve, reject) => {
+      User.findById(id, (err, user) => {
+        err ? reject(err) : resolve(user.toObject());
+      });
+    });
+  }
 
   create({ firstName, lastName }) {
-    return User.create({
-      firstName,
-      lastName,
+    return new Promise((resolve, reject) => {
+      User.create({ firstName, lastName }, (err, user) => {
+        err ? reject(err) : resolve(user.toObject());
+      });
     });
-  },
+  }
 
   update(id, { firstName, lastName }) {
-    if (ObjectId.isValid(id)) {
-      return User.findByIdAndUpdate(id, {
-        firstName,
-        lastName,
+    return new Promise((resolve, reject) => {
+      User.findByIdAndUpdate(id, { firstName, lastName }, (err, user) => {
+        err ? reject(err) : resolve(user.toObject());
       });
-    }
-  },
+    });
+  }
 
   delete(id) {
-    if (ObjectId.isValid(id)) {
-      return User.findByIdAndDelete(id);
-    }
-  },
-});
+    return new Promise((resolve, reject) => {
+      User.findByIdAndDelete(id, (err, user) => {
+        err ? reject(err) : resolve(!!user);
+      });
+    });
+  }
+};
