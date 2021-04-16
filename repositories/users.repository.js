@@ -1,49 +1,35 @@
-let users = [{
-  id: 1,
-  firstName: 'Lucien',
-  lastName: 'LAGARDE'
-}, {
-  id: 2,
-  firstName: 'Julie',
-  lastName: 'TALBOT'
-}, {
-  id: 3,
-  firstName: 'Hervé',
-  lastName: 'DUGRAND'
-}];
+const ObjectId = require("mongoose").Types.ObjectId;
 
-let nextId = users.length;
-
-module.exports = class {
-
+module.exports = (User) => ({
   getAll() {
-    return users;
-  }
+    return User.find({});
+  },
 
   getOne(id) {
-    return users.find((user) => user.id === id);
-  }
+    if (ObjectId.isValid(id)) {
+      return User.findById(id);
+    } 
+  },
 
   create({ firstName, lastName }) {
-    const user = {
+    return User.create({
       firstName,
       lastName,
-      id: nextId++
-    };
-    users.push(user);
-    return user;
-  }
+    });
+  },
 
-  update() {
-
-  }
+  update(id, { firstName, lastName }) {
+    if (ObjectId.isValid(id)) {
+      return User.findByIdAndUpdate(id, {
+        firstName,
+        lastName,
+      });
+    }
+  },
 
   delete(id) {
-    const newUsers = users.filter((user) => user.id !== id);
-    if (newUsers.length === users.length - 1) {
-      users = newUsers;
-      return true;
+    if (ObjectId.isValid(id)) {
+      return User.findByIdAndDelete(id);
     }
-    return false;
-  }
-};
+  },
+});

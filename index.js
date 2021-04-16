@@ -3,15 +3,13 @@ const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
 const mongoose = require("mongoose");
 
-const UsersRepository = require("./repositories/users.repository");
-const mongoUsersRepository = require("./repositories/mongo.users.repository");
+const usersRepository = require("./repositories/users.repository");
 const usersController = require("./controllers/users.controller");
 const pagesController = require("./controllers/pages.controller");
 const usersRoutes = require("./routes/users.routes");
 const pagesRoutes = require("./routes/pages.routes");
 const userModel = require("./models/users.model");
 
-const usersRepository = new UsersRepository();
 const viewExt = ".hbs";
 const app = express();
 const port = 3000;
@@ -27,7 +25,7 @@ app.use(
 
 app.use(bodyParser.json());
 
-app.use("/api/users", usersRoutes(express, usersController(mongoUsersRepository(userModel(mongoose)))));
+app.use("/api/users", usersRoutes(express, usersController(usersRepository(userModel(mongoose)))));
 app.use("/", pagesRoutes(express, pagesController(usersRepository)));
 
 mongoose

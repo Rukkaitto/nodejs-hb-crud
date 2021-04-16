@@ -6,7 +6,10 @@ module.exports = (repository) => ({
 
   async getUser(req, res) {
     const user = await repository.getOne(req.params.id);
-    res.json(user);
+    if (!!user) {
+      res.json(user);
+    }
+    res.status(404).send({ status: "User not found" });
   },
 
   async createUser(req, res) {
@@ -16,7 +19,10 @@ module.exports = (repository) => ({
 
   async updateUser(req, res) {
     const user = await repository.update(req.params.id, req.body);
-    res.json(user);
+    if (!!user) {
+      res.json(user);
+    }
+    res.status(404).send({ status: "User not found" });
   },
 
   async deleteUser(req, res) {
