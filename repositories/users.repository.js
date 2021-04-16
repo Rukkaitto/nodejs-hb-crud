@@ -9,6 +9,16 @@ module.exports = class {
     });
   }
 
+  getWithLastName(lastName) {
+    const regex = new RegExp(lastName, "i");
+
+    return new Promise((resolve, reject) => {
+      User.find({lastName: {$regex: regex}}, (err, users) => {
+        err ? reject(err) : resolve(users.map((user) => user.toObject()));
+      });
+    });
+  }
+
   getOne(id) {
     return new Promise((resolve, reject) => {
       User.findById(id, (err, user) => {
